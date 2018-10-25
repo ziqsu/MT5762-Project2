@@ -1,5 +1,5 @@
 # MT5762-Project2
 
 group member:
-Ziqi Su
-Linyue Li
+#1 Ziqi Su
+#2 Linyue Li
