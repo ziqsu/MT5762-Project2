@@ -1,5 +1,6 @@
 setwd("~/Masters/")
 library(tidyverse)
+library(ggplot2)
 babies.data <- read.table("MT5762/Assignment 2/babies23.data", header = TRUE)
 
 #observations from data set:
@@ -24,7 +25,8 @@ babies.data <- read.table("MT5762/Assignment 2/babies23.data", header = TRUE)
 #   nine unknown quitting times, one not asked - CLEANED
 #   ten unknown number of cigarettes smoked - CLEANED
 
-#cleaning the data as per unknown values above
+##### cleaning the data as per unknown values above #####
+
 clean.data <- babies.data
 clean.data$gestation[clean.data$gestation == "999"] <- NA
 clean.data$age[clean.data$age == "99"] <- NA
@@ -62,11 +64,62 @@ for(i in 1:ncol(clean.data)){
 }
 
 cor.vec
-#no strong correlations
+#no particularly strong correlations but gestation is strongest at 0.19
+#I appreciate that this vector isn't clear. I counted along to tell what
+#was what. Will make clearer if used in report.
 
+####### Linear regression for baby weight and all numeric variables #######
+
+#Gestation, mother's height and father's weight appear to be significant
+lin.reg <- lm(wt ~ gestation + age + ht + wt.1 + dage + dht + dwt, 
+              data = clean.data)
+summary(lin.reg)
+
+###########################################################################
+
+
+########## Analysis of gestation ##########
+
+#scatterplot of gestation against birth weight
+scat.gest <- ggplot(clean.data, aes(gestation, wt)) +
+  geom_point() + geom_smooth(method = lm)
+scat.gest
+
+#linear regression for gestation - results are significant
+lm.gest <- lm(wt ~ gestation, data = clean.data)
+summary(lm.gest)
+
+
+########## Analysis of smoke ##########
+
+#linear regression for smoke - results are significant for factor 1
+#(smokes now)
+lm.smoke <- lm(wt ~ factor(smoke), data = clean.data)
+summary(lm.smoke)
+
+#the boxplots show smaller mean for 'smokes now' but it is still within the
+#confidence intervals of the other levels of smoking
+smoke.box <- ggplot(clean.data, aes(factor(smoke), wt)) +
+  geom_boxplot()
+smoke.box
+
+########## Analysis of wt.1 (mother's weight) ##########
+
+#scatterplot of mother's weight against baby's weight
+scat.mwt <- ggplot(clean.data, aes(wt.1, wt)) +
+  geom_point() + geom_smooth(method = lm)
+scat.mwt
+
+#linear regression for mother's weight - results are NOT significant
+lm.mwt <- lm(wt ~ wt.1, data = clean.data)
+summary(lm.mwt)
+
+############################################################
+
+
+
+##ignore AIC below for now, may try later
 #let's try AIC...
-data_NONA <- na.omit(clean.data)
-fullModel <- lm(wt ~ ., data = data_NONA)
-step(fullModel)
-
-
+#data_NONA <- na.omit(clean.data)
+#fullModel <- lm(wt ~ ., data = data_NONA)
+#step(fullModel)
