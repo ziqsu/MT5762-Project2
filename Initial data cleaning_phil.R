@@ -1,7 +1,9 @@
-setwd("~/Masters/")
+#setwd("~/Masters/")
 library(tidyverse)
 library(ggplot2)
-babies.data <- read.table("MT5762/Assignment 2/babies23.data", header = TRUE)
+babies.data <- read.table("babies23.data", header = TRUE)
+#since we are working in our directory, I change the directory that I think that
+#people use this project can run it.
 
 #observations from data set:
 #   pluralty is always 5
@@ -52,7 +54,7 @@ clean.data <- clean.data %>% mutate_each(funs(as.numeric), 12:13)
 clean.data <- clean.data %>% mutate_each(funs(as.numeric), 15)
 clean.data <- clean.data %>% mutate_each(funs(as.numeric), 17:18)
 
-install.packages("corrplot")
+#install.packages("corrplot")
 library(corrplot)
 cor.data <- cor(clean.data, use = "complete.obs")
 corrplot(cor.data, method = "circle", type = "lower")
@@ -123,3 +125,10 @@ summary(lm.mwt)
 #data_NONA <- na.omit(clean.data)
 #fullModel <- lm(wt ~ ., data = data_NONA)
 #step(fullModel)
+clean.data.naomit <- na.omit(clean.data)
+dataModel <- lm(wt ~., data = clean.data.naomit)
+summary(dataModel)
+#try to use Anova, it does not work, may need to install lib
+anova(dataModel)
+dataModel <- step(dataModel)
+anova(dataModel)
