@@ -45,6 +45,8 @@ clean.data$smoke[clean.data$smoke == "9"] <- NA
 clean.data$time[clean.data$time == "99"] <- NA
 clean.data$time[clean.data$time == "98"] <- NA
 clean.data$number[clean.data$number == "98"] <- NA
+clean.data$wt.1[clean.data$wt.1 == "999"] <- NA
+
 
 #make some factors numeric
 clean.data <- clean.data %>% mutate_each(funs(as.numeric), 5)
@@ -53,6 +55,7 @@ clean.data <- clean.data %>% mutate_each(funs(as.numeric), 10)
 clean.data <- clean.data %>% mutate_each(funs(as.numeric), 12:13)
 clean.data <- clean.data %>% mutate_each(funs(as.numeric), 15)
 clean.data <- clean.data %>% mutate_each(funs(as.numeric), 17:18)
+
 
 #install.packages("corrplot")
 library(corrplot)
