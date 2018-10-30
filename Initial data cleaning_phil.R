@@ -156,7 +156,17 @@ clean.data.naomit[bigResid,]
 #plot residuals against fitted values
 dataResid <- resid(dataModel)
 plot(fitted(dataModel),dataResid, ylab= "Residuals", xlab = "Fitted Values")
+#it looks good
+#https://onlinecourses.science.psu.edu/stat501/node/277/
 
 # do Breusche-Pagan test with respect to fitted model
 ncvTest(dataModel)
+# null hypothesis: constant error variance. "If we have constant error variance
+#then the variation in the residuals should be unrelated to any coveriant."
+#MT5761 notes page 22
 
+# need to write durbinWastonTest on model
+durbinWatsonTest(dataModel)
+#null hypothesis: error are uncorrelated
+# our  p-value is 0.056, >0.05, but not by too far
+plot(dataModel, which = 1:2)
