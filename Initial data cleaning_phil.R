@@ -1,6 +1,8 @@
 #setwd("~/Masters/")
 library(tidyverse)
 library(ggplot2)
+library(car)
+
 babies.data <- read.table("babies23.data", header = TRUE)
 #since we are working in our directory, I change the directory that I think that
 #people use this project can run it.
@@ -126,17 +128,32 @@ summary(lm.mwt)
 #fullModel <- lm(wt ~ ., data = data_NONA)
 #step(fullModel)
 clean.data.naomit <- na.omit(clean.data)
+
+# select data that does not contain id and data of birth
+# consider this two factor does not have effect on baby birth weight
+# on the real life
+clean.data.naomit <- clean.data.naomit %>% select(-id,-date)
+#factor(clean.data.naomit$id)
 dataModel <- lm(wt ~., data = clean.data.naomit)
 summary(dataModel)
-#try to use Anova, it does not work, may need to install lib
-anova(dataModel)
+#try to use Anova
+Anova(dataModel)
 #model selection use AIC
 dataModel <- step(dataModel)
-anova(dataModel)
+Anova(dataModel)
 #check about normality of dataModel's residual
 qqnorm(resid(dataModel))
 qqline(resid(dataModel))
 shapiro.test(resid(dataModel))
 hist(resid(dataModel))
+
+# wen track down the extreme residuals
 bigResid <- which(abs(resid(dataModel))>5)
 clean.data.naomit[bigResid,]
+#plot residuals against fitted values
+dataResid <- resid(dataModel)
+plot(fitted(dataModel),dataResid, ylab= "Residuals", xlab = "Fitted Values")
+
+# do Breusche-Pagan test with respect to fitted model
+ncvTest(dataModel)
+
