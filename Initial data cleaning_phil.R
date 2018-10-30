@@ -130,5 +130,13 @@ dataModel <- lm(wt ~., data = clean.data.naomit)
 summary(dataModel)
 #try to use Anova, it does not work, may need to install lib
 anova(dataModel)
+#model selection use AIC
 dataModel <- step(dataModel)
 anova(dataModel)
+#check about normality of dataModel's residual
+qqnorm(resid(dataModel))
+qqline(resid(dataModel))
+shapiro.test(resid(dataModel))
+hist(resid(dataModel))
+bigResid <- which(abs(resid(dataModel))>5)
+clean.data.naomit[bigResid,]
