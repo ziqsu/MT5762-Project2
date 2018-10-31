@@ -2,6 +2,8 @@
 library(tidyverse)
 library(ggplot2)
 library(car)
+library(GGally)
+library(effects)
 
 babies.data <- read.table("babies23.data", header = TRUE)
 #since we are working in our directory, I change the directory that I think that
@@ -147,6 +149,9 @@ Anova(dataModel)
 #check about normality of dataModel's residual
 qqnorm(resid(dataModel))
 qqline(resid(dataModel))
+#the qq plot looks great but the shapiro test, p value is large than 0.05,
+# I think the reason of that maybe that we have a lot of sample(more than 1200)
+# so the shapiro test is really senstive to the outlier
 shapiro.test(resid(dataModel))
 hist(resid(dataModel))
 
@@ -170,3 +175,23 @@ durbinWatsonTest(dataModel)
 #null hypothesis: error are uncorrelated
 # our  p-value is 0.056, >0.05, but not by too far
 plot(dataModel, which = 1:2)
+
+#collinearity
+numericOnly <- clean.data.naomit %>% select_if(is.numeric)
+#use with caution, picture is sooo huge and difficult to generate
+# and do harm to my computer and not useful because we have sooo many variabales
+#ggpairs(numericOnly)
+
+vif(dataModel)
+# all number is less than 10, do not have to delete any variable
+
+#calculate confidence interval of the model
+confint(dataModel)
+
+plot(effect(term="gestation", mod = dataModel))
+plot(effect(term="smoke", mod = dataModel))
+plot(effect(term="number", mod = dataModel))
+
+
+
+
