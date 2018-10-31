@@ -4,6 +4,7 @@ library(ggplot2)
 library(car)
 library(GGally)
 library(effects)
+library(MuMIn)
 
 babies.data <- read.table("babies23.data", header = TRUE)
 #since we are working in our directory, I change the directory that I think that
@@ -60,6 +61,13 @@ clean.data <- clean.data %>% mutate_each(funs(as.numeric), 12:13)
 clean.data <- clean.data %>% mutate_each(funs(as.numeric), 15)
 clean.data <- clean.data %>% mutate_each(funs(as.numeric), 17:18)
 
+####### Exploration of the birthweight data #######
+#normally distributed
+hist(clean.data$wt)
+
+summary(clean.data$wt)
+
+##################################
 
 #install.packages("corrplot")
 library(corrplot)
@@ -108,8 +116,17 @@ summary(lm.smoke)
 
 #the boxplots show smaller mean for 'smokes now' but it is still within the
 #confidence intervals of the other levels of smoking
+smoke.box.xlabels <- c("Never", "Smokes now", "Smoked until pregnancy",
+                       "Once smoked", "Unknown")
+
+#tried to add means to boxplots but can't get it to work
+smoke.means <- aggregate(wt ~ factor(smoke), clean.data, mean)
+
 smoke.box <- ggplot(clean.data, aes(factor(smoke), wt)) +
-  geom_boxplot()
+  geom_boxplot() + labs(title = "Babies' weight per level of mother's smoking",
+                        x = "Smoked or not", y = "Babies' weight") +
+  scale_x_discrete(labels= smoke.box.xlabels) #+ 
+  #geom_text(data = smoke.means, aes(label = wt, y = wt + 0.08))
 smoke.box
 
 ########## Analysis of wt.1 (mother's weight) ##########
@@ -170,11 +187,10 @@ summary(lm.dwt)
 #fullModel <- lm(wt ~ ., data = data_NONA)
 #step(fullModel)
 clean.data.naomit <- na.omit(clean.data)
-
 # select data that does not contain id and data of birth
 # consider this two factor does not have effect on baby birth weight
 # on the real life
-clean.data.naomit <- clean.data.naomit %>% select(-id,-date)
+clean.data.naomit <- clean.data.naomit %>% dplyr::select(-id, -date)
 #factor(clean.data.naomit$id)
 dataModel <- lm(wt ~., data = clean.data.naomit)
 summary(dataModel)
@@ -192,7 +208,7 @@ qqline(resid(dataModel))
 shapiro.test(resid(dataModel))
 hist(resid(dataModel))
 
-# wen track down the extreme residuals
+# we track down the extreme residuals
 bigResid <- which(abs(resid(dataModel))>5)
 clean.data.naomit[bigResid,]
 #plot residuals against fitted values
@@ -207,13 +223,13 @@ ncvTest(dataModel)
 #then the variation in the residuals should be unrelated to any coveriant."
 #MT5761 notes page 22
 
-# need to write durbinWastonTest on model
+# need to write durbinWatsonTest on model
 durbinWatsonTest(dataModel)
 #null hypothesis: error are uncorrelated
 # our  p-value is 0.056, >0.05, but not by too far
 plot(dataModel, which = 1:2)
 
-<<<<<<< HEAD
+
 #collinearity
 numericOnly <- clean.data.naomit %>% select_if(is.numeric)
 #use with caution, picture is sooo huge and difficult to generate
@@ -226,12 +242,141 @@ vif(dataModel)
 #calculate confidence interval of the model
 confint(dataModel)
 
+#add more effect plot if you want and select variable that you 
+# think is interested
 plot(effect(term="gestation", mod = dataModel))
 plot(effect(term="smoke", mod = dataModel))
 plot(effect(term="number", mod = dataModel))
 
+#BICModel <- lm(wt ~., data = clean.data.naomit)
+#BICModel <- dredge(BICModel, rank = "BIC")
+firstorderModel <- lm(wt ~.*., data = numericOnly)
+summary(firstorderModel)
+#firstorderModel <- firstorderModel %>% update()
+#try to use Anova
+#Anova(firstorderModel)
+#model selection use AIC
 
 
+#firstorderModel <- step(firstorderModel)
+summary(firstorderModel)
+Anova(firstorderModel)
+qqnorm(resid(firstorderModel))
+qqline(resid(firstorderModel))
+shapiro.test(resid(firstorderModel))
+hist(resid(firstorderModel))
+firstorderResid <- resid(firstorderModel)
+plot(fitted(firstorderModel),firstorderResid, ylab= "Residuals", xlab = "Fitted Values")
 
-=======
->>>>>>> 2e5d39e941ff0612e09bf9ec32d75a3464e7813a
+ncvTest(firstorderModel)
+durbinWatsonTest(firstorderModel)
+plot(firstorderModel, which = 1:2)
+k<-vif(firstorderModel)
+k[which.max(k)]
+alteredModel <-update(firstorderModel,.~.-ht:marital )
+p<-vif(alteredModel)
+p[which.max(p)]
+alteredModel <-update(alteredModel,.~.-race )
+p<-vif(alteredModel)
+p[which.max(p)]
+alteredModel <-update(alteredModel,.~.-smoke )
+p<-vif(alteredModel)
+p[which.max(p)]
+alteredModel <-update(alteredModel,.~.-dht:race)
+p<-vif(alteredModel)
+p[which.max(p)]
+alteredModel <-update(alteredModel,.~.-dage)
+p<-vif(alteredModel)
+p[which.max(p)]
+alteredModel <-update(alteredModel,.~.-age:marital)
+p<-vif(alteredModel)
+p[which.max(p)]
+alteredModel <-update(alteredModel,.~.-drace)
+p<-vif(alteredModel)
+p[which.max(p)]
+alteredModel <-update(alteredModel,.~.-dht:inc)
+p<-vif(alteredModel)
+p[which.max(p)]
+alteredModel <-update(alteredModel,.~.-gestation:number)
+p<-vif(alteredModel)
+p[which.max(p)]
+alteredModel <-update(alteredModel,.~.-wt.1)
+p<-vif(alteredModel)
+p[which.max(p)]
+alteredModel <-update(alteredModel,.~.-ht:smoke)
+p<-vif(alteredModel)
+p[which.max(p)]
+alteredModel <-update(alteredModel,.~.-marital:dage )
+p<-vif(alteredModel)
+p[which.max(p)]
+alteredModel <-update(alteredModel,.~.-ed )
+p<-vif(alteredModel)
+p[which.max(p)]
+alteredModel <-update(alteredModel,.~.-parity )
+p<-vif(alteredModel)
+p[which.max(p)]
+alteredModel <-update(alteredModel,.~.-age:dwt )
+p<-vif(alteredModel)
+p[which.max(p)]
+alteredModel <-update(alteredModel,.~.-marital:race  )
+p<-vif(alteredModel)
+p[which.max(p)]
+alteredModel <-update(alteredModel,.~.-age:race )
+p<-vif(alteredModel)
+p[which.max(p)]
+alteredModel <-update(alteredModel,.~.-dwt:wt.1 )
+p<-vif(alteredModel)
+p[which.max(p)]
+alteredModel <-update(alteredModel,.~.-gestation:drace )
+p<-vif(alteredModel)
+p[which.max(p)]
+alteredModel <-update(alteredModel,.~.-ded:dwt )
+p<-vif(alteredModel)
+p[which.max(p)]
+alteredModel <-update(alteredModel,.~.-dwt:dage )
+p<-vif(alteredModel)
+p[which.max(p)]
+alteredModel <-update(alteredModel,.~.-gestation:smoke )
+p<-vif(alteredModel)
+p[which.max(p)]
+alteredModel <-update(alteredModel,.~.-ded:time )
+p<-vif(alteredModel)
+p[which.max(p)]
+alteredModel <-update(alteredModel,.~.-marital:ed )
+p<-vif(alteredModel)
+p[which.max(p)]
+alteredModel <-update(alteredModel,.~.-dage:race )
+p<-vif(alteredModel)
+p[which.max(p)]
+alteredModel <-update(alteredModel,.~.-dwt:ed )
+p<-vif(alteredModel)
+p[which.max(p)]
+alteredModel <-update(alteredModel,.~.-gestation:parity)
+p<-vif(alteredModel)
+p[which.max(p)]
+alteredModel <-update(alteredModel,.~.-ed:smoke)
+p<-vif(alteredModel)
+p[which.max(p)]
+alteredModel <-update(alteredModel,.~.-age:drace)
+p<-vif(alteredModel)
+p[which.max(p)]
+alteredModel <-update(alteredModel,.~.-dwt:race)
+p<-vif(alteredModel)
+p[which.max(p)]
+alteredModel <-update(alteredModel,.~.-dwt:smoke)
+p<-vif(alteredModel)
+p[which.max(p)]
+alteredModel <-update(alteredModel,.~.-inc:ed)
+p<-vif(alteredModel)
+p[which.max(p)]
+summary(alteredModel)
+qqnorm(resid(alteredModel))
+qqline(resid(alteredModel))
+shapiro.test(resid(alteredModel))
+Anova(alteredModel)
+confint(alteredModel)
+
+
+#maybe useful, need to ask professor
+finalModel <- step(alteredModel)
+vif(finalModel)
