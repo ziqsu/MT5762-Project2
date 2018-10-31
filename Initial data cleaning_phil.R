@@ -377,3 +377,6 @@ Anova(alteredModel)
 confint(alteredModel)
 
 
+#maybe useful, need to ask professor
+finalModel <- step(alteredModel)
+vif(finalModel)
