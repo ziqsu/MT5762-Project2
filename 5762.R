@@ -21,6 +21,7 @@ data$age[data$age == "99"] <- NA
 data$ed[data$ed == "9"] <- NA
 data$ht[data$ht == "99"] <- NA
 data$wt[data$wt == "99"] <- NA
+data$wt.1[data$wt == "99"] <- NA
 data$drace[data$drace == "99"] <- NA
 data$dage[data$dage == "99"] <- NA
 data$ded[data$ded == "9"] <- NA
@@ -63,16 +64,49 @@ plot_smoke <- ggplot(data = data, aes(x = smoke, y = wt)) +
   theme_dark()
 plot_smoke
 
-plot_age <- ggplot(data, aes(x = age,y = wt)) +
+plot_age <- ggplot(data, aes(x = wt.1,y = wt)) +
   geom_point(aes(colour = wt), size = 5) +
-  xlab(" Mother's Age " ) + ylab(" Birth weight in ounces ") +
+  xlab(" Smoking " ) + ylab(" Birth weight in ounces ") +
   theme_bw() +
   ggtitle(" Scatterplot between Mother's Age and Birth Weight ")
 plot_age
 
+
+boxplot((wt)~smoke, data, main = toupper("Boxplot for wt and smoking"),
+        xlab = "Smoking levels", ylab = "wt", col = "Blue")
 Groupby_race <- group_by(data, race)
 
 
 
 
+plot_correlation(data)
 
+# Model fit for certain variables against baby weight
+# Changing the class of categorical variables back to integers
+cols_to_change = c(8, 9, 11, 14, 16, 20:23)
+for(i in cols_to_change){
+  class(data[, i]) = "integer"
+}
+cols_to_change
+
+# Fitting a model for mother's weight and race against baby weight
+# Linear model between race, mother weight against baby weight
+
+race_wt.1 <- lm(wt ~ race*wt.1, data = data)
+summary(race_wt.1)
+
+# Linear model between mother weight and smoking against baby weight 
+smoke_wt.1 <- lm(wt ~ smoke*wt.1, data = data)
+summary(smoke_wt.1)
+
+# Linear model between mother weight and smoking against baby weight 
+parity_wt.1 <- lm(wt ~ parity*wt.1, data = data)
+summary(parity_wt.1)
+
+# Linear model between mother's weight and time against baby weight
+time_wt.1 <- lm(wt ~ time*wt.1, data = data)
+summary(time_wt.1)
+
+# Linear model between mother's weight and time against baby weight
+inc_wt.1 <- lm(wt ~ inc*wt.1, data = data)
+summary(inc_wt.1)
