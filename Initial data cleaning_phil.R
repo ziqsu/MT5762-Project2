@@ -102,7 +102,7 @@ summary(lm.gest)
 ########## Analysis of smoke ##########
 
 #linear regression for smoke - results are significant for factor 1
-#(smokes now)
+#(smokes now) compared to never smoked (the baseline)
 lm.smoke <- lm(wt ~ factor(smoke), data = clean.data)
 summary(lm.smoke)
 
@@ -122,6 +122,43 @@ scat.mwt
 #linear regression for mother's weight - results are NOT significant
 lm.mwt <- lm(wt ~ wt.1, data = clean.data)
 summary(lm.mwt)
+
+
+########## Analysis of number (of cigarettes smoked by mother) ##########
+
+#boxplots don't show much
+number.box <- ggplot(clean.data, aes(factor(number), wt)) +
+  geom_boxplot()
+number.box
+
+#linear regression for number of cigarettes smoked
+lm.number <- lm(wt ~ factor(number), data = clean.data)
+summary(lm.number)
+
+
+########## Analysis of height (of mother) ##########
+
+#scatterplot of mother's height against baby's weight
+scat.mht <- ggplot(clean.data, aes(ht, wt)) +
+  geom_point() + geom_smooth(method = lm)
+scat.mht
+
+#linear regression for mother's height - results are significant
+lm.mht <- lm(wt ~ ht, data = clean.data)
+summary(lm.mht)
+
+
+########## Analysis of weight (of father) ##########
+
+#scatterplot of father's weight against baby's weight
+scat.dwt <- ggplot(clean.data, aes(dwt, wt)) +
+  geom_point() + geom_smooth(method = lm)
+scat.dwt
+
+#linear regression for father's weight - results are significant
+lm.dwt <- lm(wt ~ dwt, data = clean.data)
+summary(lm.dwt)
+
 
 ############################################################
 
@@ -176,6 +213,7 @@ durbinWatsonTest(dataModel)
 # our  p-value is 0.056, >0.05, but not by too far
 plot(dataModel, which = 1:2)
 
+<<<<<<< HEAD
 #collinearity
 numericOnly <- clean.data.naomit %>% select_if(is.numeric)
 #use with caution, picture is sooo huge and difficult to generate
@@ -195,3 +233,5 @@ plot(effect(term="number", mod = dataModel))
 
 
 
+=======
+>>>>>>> 2e5d39e941ff0612e09bf9ec32d75a3464e7813a
