@@ -53,7 +53,7 @@ plot_gest <- ggplot(data, aes(x = gestation,y = wt)) +
 plot_gest
 
 plot_dwt <- ggplot(data, aes(x = dwt,y = wt)) +
-  geom_point(aes(colour = wt), size = 5) +
+  geom_point(aes(colour = dwt), size = 5) +
   xlab(" Father's weighgt in pounds " ) + ylab(" Birth weight in ounces ") +
   theme_dark() +
   ggtitle(" Scatterplot between Father's weight and Birth Weight ")
@@ -64,13 +64,19 @@ plot_smoke <- ggplot(data = data, aes(x = smoke, y = wt)) +
   theme_dark()
 plot_smoke
 
-plot_age <- ggplot(data, aes(x = wt.1,y = wt)) +
+plot_age <- ggplot(data, aes(x = age,y = wt)) +
   geom_point(aes(colour = wt), size = 5) +
-  xlab(" Smoking " ) + ylab(" Birth weight in ounces ") +
+  xlab(" Mother's age " ) + ylab(" Birth weight in ounces ") +
   theme_bw() +
   ggtitle(" Scatterplot between Mother's Age and Birth Weight ")
 plot_age
 
+plot_wt.1 <- ggplot(data, aes(x = wt.1,y = wt)) +
+  geom_point(aes(colour = wt), size = 5) +
+  xlab(" Mother's weight " ) + ylab(" Birth weight in ounces ") +
+  theme_bw() +
+  ggtitle(" Scatterplot between Mother's Age and Birth Weight ")
+plot_wt.1
 
 boxplot((wt)~smoke, data, main = toupper("Boxplot for wt and smoking"),
         xlab = "Smoking levels", ylab = "wt", col = "Blue")
@@ -155,3 +161,7 @@ plot(fitted(parity_wt.1), parity_resid, ylab = 'residuals', xlab = 'Fitted value
 inc_resid <- resid(inc_wt.1)
 plot(fitted(inc_wt.1), inc_resid, ylab = 'residuals', xlab = 'Fitted values')
 
+# Error independence of model between race, mother weight against baby weight
+durbinWatsonTest(race_wt.1)
+library(car)
+vif()
