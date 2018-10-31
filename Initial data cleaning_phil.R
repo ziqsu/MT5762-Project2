@@ -229,11 +229,7 @@ durbinWatsonTest(dataModel)
 # our  p-value is 0.056, >0.05, but not by too far
 plot(dataModel, which = 1:2)
 
-<<<<<<< HEAD
 
-=======
-#HEAD
->>>>>>> 1e40b2b3603316a2698eadf7b66045b303583fa1
 #collinearity
 numericOnly <- clean.data.naomit %>% select_if(is.numeric)
 #use with caution, picture is sooo huge and difficult to generate
@@ -275,9 +271,4 @@ plot(fitted(firstorderModel),firstorderResid, ylab= "Residuals", xlab = "Fitted 
 
 
 
-<<<<<<< HEAD
 
-=======
-#=======
-#>>>>>>> 2e5d39e941ff0612e09bf9ec32d75a3464e7813a
->>>>>>> 1e40b2b3603316a2698eadf7b66045b303583fa1
