@@ -174,5 +174,7 @@ durbinWatsonTest(parity_wt.1)
 # Error independence of model between mother's weight and income against baby weight
 durbinWatsonTest(inc_wt.1)
 
-
-
+AIC(race_wt.1)
+AIC(smoke_wt.1)
+AIC(parity_wt.1)
+AIC(inc_wt.1)
