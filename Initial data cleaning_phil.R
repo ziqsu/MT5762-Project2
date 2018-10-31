@@ -4,6 +4,7 @@ library(ggplot2)
 library(car)
 library(GGally)
 library(effects)
+library(MuMIn)
 
 babies.data <- read.table("babies23.data", header = TRUE)
 #since we are working in our directory, I change the directory that I think that
@@ -170,11 +171,10 @@ summary(lm.dwt)
 #fullModel <- lm(wt ~ ., data = data_NONA)
 #step(fullModel)
 clean.data.naomit <- na.omit(clean.data)
-
 # select data that does not contain id and data of birth
 # consider this two factor does not have effect on baby birth weight
 # on the real life
-clean.data.naomit <- clean.data.naomit %>% select(-id,-date)
+clean.data.naomit <- clean.data.naomit %>% dplyr::select(-id, -date)
 #factor(clean.data.naomit$id)
 dataModel <- lm(wt ~., data = clean.data.naomit)
 summary(dataModel)
@@ -192,7 +192,7 @@ qqline(resid(dataModel))
 shapiro.test(resid(dataModel))
 hist(resid(dataModel))
 
-# wen track down the extreme residuals
+# we track down the extreme residuals
 bigResid <- which(abs(resid(dataModel))>5)
 clean.data.naomit[bigResid,]
 #plot residuals against fitted values
@@ -213,7 +213,7 @@ durbinWatsonTest(dataModel)
 # our  p-value is 0.056, >0.05, but not by too far
 plot(dataModel, which = 1:2)
 
-<<<<<<< HEAD
+
 #collinearity
 numericOnly <- clean.data.naomit %>% select_if(is.numeric)
 #use with caution, picture is sooo huge and difficult to generate
@@ -226,12 +226,33 @@ vif(dataModel)
 #calculate confidence interval of the model
 confint(dataModel)
 
+#add more effect plot if you want and select variable that you 
+# think is interested
 plot(effect(term="gestation", mod = dataModel))
 plot(effect(term="smoke", mod = dataModel))
 plot(effect(term="number", mod = dataModel))
 
+#BICModel <- lm(wt ~., data = clean.data.naomit)
+#BICModel <- dredge(BICModel, rank = "BIC")
+firstorderModel <- lm(wt ~.*., data = numericOnly)
+summary(firstorderModel)
+#firstorderModel <- firstorderModel %>% update()
+#try to use Anova
+#Anova(firstorderModel)
+#model selection use AIC
+
+
+firstorderModel <- step(firstorderModel)
+summary(firstorderModel)
+Anova(firstorderModel)
+qqnorm(resid(firstorderModel))
+qqline(resid(firstorderModel))
+shapiro.test(resid(firstorderModel))
+hist(resid(firstorderModel))
+firstorderResid <- resid(firstorderModel)
+plot(fitted(firstorderModel),firstorderResid, ylab= "Residuals", xlab = "Fitted Values")
 
 
 
-=======
->>>>>>> 2e5d39e941ff0612e09bf9ec32d75a3464e7813a
+
+
