@@ -61,6 +61,13 @@ clean.data <- clean.data %>% mutate_each(funs(as.numeric), 12:13)
 clean.data <- clean.data %>% mutate_each(funs(as.numeric), 15)
 clean.data <- clean.data %>% mutate_each(funs(as.numeric), 17:18)
 
+####### Exploration of the birthweight data #######
+#normally distributed
+hist(clean.data$wt)
+
+summary(clean.data$wt)
+
+##################################
 
 #install.packages("corrplot")
 library(corrplot)
@@ -109,8 +116,17 @@ summary(lm.smoke)
 
 #the boxplots show smaller mean for 'smokes now' but it is still within the
 #confidence intervals of the other levels of smoking
+smoke.box.xlabels <- c("Never", "Smokes now", "Smoked until pregnancy",
+                       "Once smoked", "Unknown")
+
+#tried to add means to boxplots but can't get it to work
+smoke.means <- aggregate(wt ~ factor(smoke), clean.data, mean)
+
 smoke.box <- ggplot(clean.data, aes(factor(smoke), wt)) +
-  geom_boxplot()
+  geom_boxplot() + labs(title = "Babies' weight per level of mother's smoking",
+                        x = "Smoked or not", y = "Babies' weight") +
+  scale_x_discrete(labels= smoke.box.xlabels) #+ 
+  #geom_text(data = smoke.means, aes(label = wt, y = wt + 0.08))
 smoke.box
 
 ########## Analysis of wt.1 (mother's weight) ##########
@@ -213,7 +229,11 @@ durbinWatsonTest(dataModel)
 # our  p-value is 0.056, >0.05, but not by too far
 plot(dataModel, which = 1:2)
 
+<<<<<<< HEAD
 
+=======
+#HEAD
+>>>>>>> 1e40b2b3603316a2698eadf7b66045b303583fa1
 #collinearity
 numericOnly <- clean.data.naomit %>% select_if(is.numeric)
 #use with caution, picture is sooo huge and difficult to generate
@@ -255,4 +275,9 @@ plot(fitted(firstorderModel),firstorderResid, ylab= "Residuals", xlab = "Fitted 
 
 
 
+<<<<<<< HEAD
 
+=======
+#=======
+#>>>>>>> 2e5d39e941ff0612e09bf9ec32d75a3464e7813a
+>>>>>>> 1e40b2b3603316a2698eadf7b66045b303583fa1
