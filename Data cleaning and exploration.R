@@ -69,6 +69,7 @@ wt.df <- as.data.frame(BabyWeight)
 #and father's weight (dwt)
 CorrelationValue <- cor(clean.data, clean.data$wt, use = "complete.obs")
 cor.df <- as.data.frame(CorrelationValue)
+cor.df
 
 #We will now explore each variable in turn
 
@@ -78,13 +79,45 @@ cor.df <- as.data.frame(CorrelationValue)
 plot_gest <- ggplot(data, aes(x = gestation,y = wt)) +
   geom_point(size = 1) +
   xlab(" Gestation Period (days) " ) + ylab(" Birth Weight (ounces) ") +
-  theme_dark() +
   ggtitle(" Scatterplot between Gestation Period and Birth Weight ")
 plot_gest
 
-########## Analysis of smoke ##########
+########## Analysis of ht (mother's height) ##########
+
+#scatterplot of mother's height against baby's weight
+#This does not indicate a strong effect between the variables.
+scat.mht <- ggplot(clean.data, aes(ht, wt)) +
+  geom_point(size = 1, colour = "tomato1") + 
+  xlab(" Mother's Height (inches) " ) +   ylab(" Birth Weight (ounces) ") +
+  ggtitle(" Scatterplot between Mother's Height and Birth Weight ")
+scat.mht
+
+########## Analysis of wt.1 (mother's weight) ##########
+
+#scatterplot of mother's weight against baby's weight
+#This does not indicate a strong effect between the variables.
+scat.mwt <- ggplot(clean.data, aes(wt.1, wt)) +
+  geom_point(size = 1, colour = "navyblue") + 
+  xlab(" Mother's Weight (pounds) " ) +   ylab(" Birth Weight (ounces) ") + 
+  ggtitle(" Scatterplot between Mother's Weight and Birth Weight ")
+scat.mwt
+
+########## Analysis of dwt (father's weight) ##########
+
+#scatterplot of mother's weight against baby's weight
+#This does not indicate a strong between the variables.
+scat.dwt <- ggplot(clean.data, aes(dwt, wt)) +
+  geom_point(size = 1, colour = "darkgreen") + 
+  xlab(" Father's Weight (pounds) " ) +   ylab(" Birth Weight (ounces) ") + 
+  ggtitle(" Scatterplot between Father's Weight and Birth Weight ")
+scat.dwt
+
+
+########## Exploration of smoke ##########
+#Although 'smoke' had no correlation with birth weight, common sense says
+#that there would be an effect here between factors of smoking
 #The boxplots show smaller mean for 'smokes now' but it is still within the
-#confidence intervals of the other levels of smoking
+#nterquartile range of the other levels of smoking
 #Therefore, the effect may not be large.
 
 #Creating labels for the x axis
@@ -95,5 +128,8 @@ smoke.box <- ggplot(clean.data, aes(factor(smoke), wt)) +
   geom_boxplot(fill = "seagreen4") + 
   labs(title = "Birth Weight per Level of Mother's Smoking",
                         x = "Smoked or not", y = "Babies' weight") +
-  scale_x_discrete(labels= smoke.box.xlabels)
+  scale_x_discrete(labels= smoke.box.xlabels) +
+  theme(axis.text.x=element_text(angle=15, hjust=1))
 smoke.box
+
+
