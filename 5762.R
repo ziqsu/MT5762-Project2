@@ -162,6 +162,17 @@ inc_resid <- resid(inc_wt.1)
 plot(fitted(inc_wt.1), inc_resid, ylab = 'residuals', xlab = 'Fitted values')
 
 # Error independence of model between race, mother weight against baby weight
-durbinWatsonTest(race_wt.1)
 library(car)
-vif()
+durbinWatsonTest(race_wt.1)
+
+# Error independence of  model between mother's weight and smoking against baby weight
+durbinWatsonTest(smoke_wt.1)
+
+# Error independence of mother's weight and parity against baby weight
+durbinWatsonTest(parity_wt.1)
+
+# Error independence of model between mother's weight and income against baby weight
+durbinWatsonTest(inc_wt.1)
+
+
+
