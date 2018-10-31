@@ -1,5 +1,5 @@
 # Loading dataset into R
-data <-  read.table(file.choose(), header = T)
+data <-  read.table("babies23.data", header = T)
 data
 # Data Cleaning process begins
 # Checking for missing values in data
@@ -45,7 +45,7 @@ plot_hist.wt <- ggplot(data, aes(x = wt, y = ..density.. )) +
   xlab(" Birth weight in ounces ")+ ylab(" Density ")+ theme_dark() 
 plot_hist.wt
 
-plot_gest <- ggplot(data, aes(x = gestation,y = wt)) +
+plot_gest <- ggplot(data, aes(x = log(gestation),y = wt)) +
   geom_point(aes(colour = wt), size = 5) +
   xlab(" Gestation period " ) + ylab(" Birth weight in ounces ") +
   theme_dark() +

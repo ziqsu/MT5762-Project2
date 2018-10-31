@@ -223,7 +223,7 @@ ncvTest(dataModel)
 #then the variation in the residuals should be unrelated to any coveriant."
 #MT5761 notes page 22
 
-# need to write durbinWastonTest on model
+# need to write durbinWatsonTest on model
 durbinWatsonTest(dataModel)
 #null hypothesis: error are uncorrelated
 # our  p-value is 0.056, >0.05, but not by too far
@@ -258,7 +258,7 @@ summary(firstorderModel)
 #model selection use AIC
 
 
-firstorderModel <- step(firstorderModel)
+#firstorderModel <- step(firstorderModel)
 summary(firstorderModel)
 Anova(firstorderModel)
 qqnorm(resid(firstorderModel))
@@ -268,7 +268,115 @@ hist(resid(firstorderModel))
 firstorderResid <- resid(firstorderModel)
 plot(fitted(firstorderModel),firstorderResid, ylab= "Residuals", xlab = "Fitted Values")
 
+ncvTest(firstorderModel)
+durbinWatsonTest(firstorderModel)
+plot(firstorderModel, which = 1:2)
+k<-vif(firstorderModel)
+k[which.max(k)]
+alteredModel <-update(firstorderModel,.~.-ht:marital )
+p<-vif(alteredModel)
+p[which.max(p)]
+alteredModel <-update(alteredModel,.~.-race )
+p<-vif(alteredModel)
+p[which.max(p)]
+alteredModel <-update(alteredModel,.~.-smoke )
+p<-vif(alteredModel)
+p[which.max(p)]
+alteredModel <-update(alteredModel,.~.-dht:race)
+p<-vif(alteredModel)
+p[which.max(p)]
+alteredModel <-update(alteredModel,.~.-dage)
+p<-vif(alteredModel)
+p[which.max(p)]
+alteredModel <-update(alteredModel,.~.-age:marital)
+p<-vif(alteredModel)
+p[which.max(p)]
+alteredModel <-update(alteredModel,.~.-drace)
+p<-vif(alteredModel)
+p[which.max(p)]
+alteredModel <-update(alteredModel,.~.-dht:inc)
+p<-vif(alteredModel)
+p[which.max(p)]
+alteredModel <-update(alteredModel,.~.-gestation:number)
+p<-vif(alteredModel)
+p[which.max(p)]
+alteredModel <-update(alteredModel,.~.-wt.1)
+p<-vif(alteredModel)
+p[which.max(p)]
+alteredModel <-update(alteredModel,.~.-ht:smoke)
+p<-vif(alteredModel)
+p[which.max(p)]
+alteredModel <-update(alteredModel,.~.-marital:dage )
+p<-vif(alteredModel)
+p[which.max(p)]
+alteredModel <-update(alteredModel,.~.-ed )
+p<-vif(alteredModel)
+p[which.max(p)]
+alteredModel <-update(alteredModel,.~.-parity )
+p<-vif(alteredModel)
+p[which.max(p)]
+alteredModel <-update(alteredModel,.~.-age:dwt )
+p<-vif(alteredModel)
+p[which.max(p)]
+alteredModel <-update(alteredModel,.~.-marital:race  )
+p<-vif(alteredModel)
+p[which.max(p)]
+alteredModel <-update(alteredModel,.~.-age:race )
+p<-vif(alteredModel)
+p[which.max(p)]
+alteredModel <-update(alteredModel,.~.-dwt:wt.1 )
+p<-vif(alteredModel)
+p[which.max(p)]
+alteredModel <-update(alteredModel,.~.-gestation:drace )
+p<-vif(alteredModel)
+p[which.max(p)]
+alteredModel <-update(alteredModel,.~.-ded:dwt )
+p<-vif(alteredModel)
+p[which.max(p)]
+alteredModel <-update(alteredModel,.~.-dwt:dage )
+p<-vif(alteredModel)
+p[which.max(p)]
+alteredModel <-update(alteredModel,.~.-gestation:smoke )
+p<-vif(alteredModel)
+p[which.max(p)]
+alteredModel <-update(alteredModel,.~.-ded:time )
+p<-vif(alteredModel)
+p[which.max(p)]
+alteredModel <-update(alteredModel,.~.-marital:ed )
+p<-vif(alteredModel)
+p[which.max(p)]
+alteredModel <-update(alteredModel,.~.-dage:race )
+p<-vif(alteredModel)
+p[which.max(p)]
+alteredModel <-update(alteredModel,.~.-dwt:ed )
+p<-vif(alteredModel)
+p[which.max(p)]
+alteredModel <-update(alteredModel,.~.-gestation:parity)
+p<-vif(alteredModel)
+p[which.max(p)]
+alteredModel <-update(alteredModel,.~.-ed:smoke)
+p<-vif(alteredModel)
+p[which.max(p)]
+alteredModel <-update(alteredModel,.~.-age:drace)
+p<-vif(alteredModel)
+p[which.max(p)]
+alteredModel <-update(alteredModel,.~.-dwt:race)
+p<-vif(alteredModel)
+p[which.max(p)]
+alteredModel <-update(alteredModel,.~.-dwt:smoke)
+p<-vif(alteredModel)
+p[which.max(p)]
+alteredModel <-update(alteredModel,.~.-inc:ed)
+p<-vif(alteredModel)
+p[which.max(p)]
+summary(alteredModel)
+qqnorm(resid(alteredModel))
+qqline(resid(alteredModel))
+shapiro.test(resid(alteredModel))
+Anova(alteredModel)
+confint(alteredModel)
 
 
-
-
+#maybe useful, need to ask professor
+finalModel <- step(alteredModel)
+vif(finalModel)
