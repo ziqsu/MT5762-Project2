@@ -6,7 +6,9 @@ library(GGally)
 library(effects)
 library(MuMIn)
 
-babies.data <- read.table("babies23.data", header = TRUE)
+setwd("~/Masters/")
+babies.data <- read.table("MT5762/Assignment 2/MT5762-Project2/babies23.data", 
+                          header = TRUE)
 #since we are working in our directory, I change the directory that I think that
 #people use this project can run it.
 
