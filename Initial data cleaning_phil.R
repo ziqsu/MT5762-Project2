@@ -404,6 +404,12 @@ p[which.max(p)]
 #finally, we finish deleting collinear variable and we do a AIC do a backward
 #model selection and get the finalModel
 finalModel <- step(alteredModel)
+<<<<<<< HEAD
+=======
+vif(finalModel)
+
+
+>>>>>>> bea7f278a48d94d5b85b642a4ed7efff72358496
 #check final model colinearity and all of them are less than 10, it works.
 vif(finalModel)
 #get summary of finalModel
