@@ -388,15 +388,3 @@ confint(alteredModel)
 finalModel <- step(alteredModel)
 vif(finalModel)
 
-boot.dataModel <- function(inputdata, nboot){
-  NumofRow <- nrow(inputdata)
-  bootResult <- matrix(NA,nrow = nboot, ncol = 8)
-  for(i in 1:nboot){
-    bootdata <- inputdata[sample(1:NumofRow),NumofRow]
-    bootLM <- lm(wt~ gestation+parity+ht+drace+dwt+smoke+number, data = inputdata)
-    print(coef(bootLM))
-    bootResult[i,] <- coef(bootLM)
-  }
-  bootResult
-  
-} 
