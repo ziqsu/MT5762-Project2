@@ -4,7 +4,7 @@ library(ggplot2)
 library(car)
 library(GGally)
 library(effects)
-library(MuMIn)
+
 
 #setwd("~/Masters/")
 babies.data <- read.table("babies23.data", header = TRUE)
@@ -272,11 +272,10 @@ firstorderModel <- lm(wt ~.*., data = numericOnly)
 summary(firstorderModel)
 
 
-<<<<<<< HEAD
-=======
+
 
 #model selection use AIC
->>>>>>> 8f627a33b6fc2c8fd1acfca905ceaa695f397aee
+
 firstorderModel <- step(firstorderModel)
 summary(firstorderModel)
 Anova(firstorderModel)
@@ -404,7 +403,6 @@ p[which.max(p)]
 #finally, we finish deleting collinear variable and we do a AIC do a backward
 #model selection and get the finalModel
 finalModel <- step(alteredModel)
-<<<<<<< HEAD
 vif(finalModel)
 
 
