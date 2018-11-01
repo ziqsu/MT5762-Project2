@@ -6,9 +6,8 @@ library(GGally)
 library(effects)
 library(MuMIn)
 
-setwd("~/Masters/")
-babies.data <- read.table("MT5762/Assignment 2/MT5762-Project2/babies23.data", 
-                          header = TRUE)
+#setwd("~/Masters/")
+babies.data <- read.table("babies23.data", header = TRUE)
 #since we are working in our directory, I change the directory that I think that
 #people use this project can run it.
 
@@ -62,6 +61,7 @@ clean.data <- clean.data %>% mutate_each(funs(as.numeric), 10)
 clean.data <- clean.data %>% mutate_each(funs(as.numeric), 12:13)
 clean.data <- clean.data %>% mutate_each(funs(as.numeric), 15)
 clean.data <- clean.data %>% mutate_each(funs(as.numeric), 17:18)
+
 
 ####### Exploration of the birthweight data #######
 #normally distributed
@@ -187,7 +187,6 @@ summary(lm.dwt)
 
 
 
-
 ##ignore AIC below for now, may try later
 #let's try AIC...
 #data_NONA <- na.omit(clean.data)
@@ -255,12 +254,22 @@ plot(effect(term="gestation", mod = dataModel))
 plot(effect(term="smoke", mod = dataModel))
 plot(effect(term="number", mod = dataModel))
 
+
+
+
+
+cols_to_change = c(1, 2,3, 4,6, 8, 9, 11, 14, 16, 19, 20:23)
+for(i in cols_to_change){
+  class(clean.data[, i]) = "factor"
+}
+cols_to_change
+
 #BICModel <- lm(wt ~., data = clean.data.naomit)
 #BICModel <- dredge(BICModel, rank = "BIC")
 firstorderModel <- lm(wt ~.*., data = numericOnly)
 summary(firstorderModel)
 
-#firstorderModel <- firstorderModel %>% update()
+firstorderModel <- firstorderModel %>% update()
 #try to use Anova
 #Anova(firstorderModel)
 #model selection use AIC
@@ -378,15 +387,18 @@ alteredModel <-update(alteredModel,.~.-inc:ed)
 p<-vif(alteredModel)
 p[which.max(p)]
 
-summary(alteredModel)
-qqnorm(resid(alteredModel))
-qqline(resid(alteredModel))
-shapiro.test(resid(alteredModel))
-Anova(alteredModel)
-confint(alteredModel)
 
 
 #maybe useful, need to ask professor
 finalModel <- step(alteredModel)
 vif(finalModel)
 
+summary(finalModel)
+qqnorm(resid(finalModel))
+qqline(resid(finalModel))
+shapiro.test(resid(finalModel))
+Anova(finalModel)
+confint(finalModel)
+
+
+#forward Selection
