@@ -13,3 +13,5 @@ cv.lm(clean.data.naomit, form.lm = dataModel, plotit = "Residual", m=5)
 library(dvmisc)
 get_mse(finalModel,var.estimate = FALSE)
 get_mse(dataModel, var.estimate = FALSE)
+
+
