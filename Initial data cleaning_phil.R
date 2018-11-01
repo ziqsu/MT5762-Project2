@@ -272,11 +272,10 @@ firstorderModel <- lm(wt ~.*., data = numericOnly)
 summary(firstorderModel)
 
 
-<<<<<<< HEAD
-=======
+
 
 #model selection use AIC
->>>>>>> 8f627a33b6fc2c8fd1acfca905ceaa695f397aee
+
 firstorderModel <- step(firstorderModel)
 summary(firstorderModel)
 Anova(firstorderModel)
@@ -404,7 +403,6 @@ p[which.max(p)]
 #finally, we finish deleting collinear variable and we do a AIC do a backward
 #model selection and get the finalModel
 finalModel <- step(alteredModel)
-<<<<<<< HEAD
 vif(finalModel)
 
 
@@ -457,7 +455,7 @@ cv.lm(fit, k=5, seed=5762, max_cores = 1)
 parameterGrid <- expand.grid(mtry=c(1,2,3,4,5))
 
 modelRandom <- train (wt~gestation, data = trainDF, method = "rf", trControl = ControlParameters, tuneGrid = parameterGrid)
-=======
+
 #check final model colinearity and all of them are less than 10, it works.
 vif(finalModel)
 
@@ -480,5 +478,4 @@ Anova(finalModel)
 confint(finalModel)
 
 
->>>>>>> 8f627a33b6fc2c8fd1acfca905ceaa695f397aee
 
