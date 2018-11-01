@@ -406,6 +406,7 @@ finalModel <- step(alteredModel)
 vif(finalModel)
 
 
+<<<<<<< HEAD
 
 
 # Consider 5 fold cross validation:
@@ -456,6 +457,8 @@ parameterGrid <- expand.grid(mtry=c(1,2,3,4,5))
 
 modelRandom <- train (wt~gestation, data = trainDF, method = "rf", trControl = ControlParameters, tuneGrid = parameterGrid)
 
+=======
+>>>>>>> e6cdaac176dc799968dc63c7456f90d59219b5b0
 #check final model colinearity and all of them are less than 10, it works.
 vif(finalModel)
 
