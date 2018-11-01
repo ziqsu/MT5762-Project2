@@ -14,7 +14,7 @@ bst <- function(formula, data, indices){
 }
 
 #The bootstrapping results are stored as 'results'
-#1250 replications is the fewest that allow the boot() function to run
+#1500 replications is the fewest that allow the boot() function to run
 #I do not know why that is
 results <- boot(data = clean.data, statistic = bst, R = 1250, formula = dataModel)
 

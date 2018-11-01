@@ -182,8 +182,12 @@ summary(lm.dwt)
 ############################################################
 
 
-
-
+#make sure R knows that these variables are factors
+cols_to_change = c(1, 2, 3, 4,6, 8, 9, 11, 14, 16, 19, 20:23)
+for(i in cols_to_change){
+  class(clean.data[, i]) = "factor"
+}
+cols_to_change
 
 
 
@@ -209,8 +213,7 @@ Anova(dataModel)
 qqnorm(resid(dataModel))
 qqline(resid(dataModel))
 #the qq plot looks great but the shapiro test, p value is large than 0.05,
-# I think the reason of that maybe that we have a lot of sample(more than 1200)
-# so the shapiro test is really senstive to the outlier
+# so the residual of the data Model is normal
 shapiro.test(resid(dataModel))
 hist(resid(dataModel))
 
@@ -250,31 +253,27 @@ confint(dataModel)
 
 #add more effect plot if you want and select variable that you 
 # think is interested
-plot(effect(term="gestation", mod = dataModel))
-plot(effect(term="smoke", mod = dataModel))
-plot(effect(term="number", mod = dataModel))
+#plot(effect(term="gestation", mod = dataModel))
+#plot(effect(term="smoke", mod = dataModel))
+#plot(effect(term="number", mod = dataModel))
 
 
 
 
 
-cols_to_change = c(1, 2,3, 4,6, 8, 9, 11, 14, 16, 19, 20:23)
+cols_to_change = c(1, 2, 3, 4,6, 8, 9, 11, 14, 16, 19, 20:23)
 for(i in cols_to_change){
   class(clean.data[, i]) = "factor"
 }
 cols_to_change
 
-#BICModel <- lm(wt ~., data = clean.data.naomit)
-#BICModel <- dredge(BICModel, rank = "BIC")
+#create a first order iteraction for every variable
 firstorderModel <- lm(wt ~.*., data = numericOnly)
 summary(firstorderModel)
 
-firstorderModel <- firstorderModel %>% update()
-#try to use Anova
-#Anova(firstorderModel)
+
+
 #model selection use AIC
-
-
 firstorderModel <- step(firstorderModel)
 summary(firstorderModel)
 Anova(firstorderModel)
@@ -288,6 +287,16 @@ plot(fitted(firstorderModel),firstorderResid, ylab= "Residuals", xlab = "Fitted 
 ncvTest(firstorderModel)
 durbinWatsonTest(firstorderModel)
 plot(firstorderModel, which = 1:2)
+
+# we exam the collinearity of the firstorderModel we find that there are a lot of
+# variable that its GVIF number is larger than 10, so in the following step.
+ 
+# 1. we find the maximum number of GVIF, if it is larger than 10,remove it  
+# 2. do the vif function again to check the collinearity and get the maximum repeat the step 1
+
+# we do the above two steps until all the variable's collinearity GVIF is less than 10
+# or we do not have a collinearity problem anymore
+# following just the process of removing every variable that is collinear
 k<-vif(firstorderModel)
 k[which.max(k)]
 alteredModel <-update(firstorderModel,.~.-ht:marital )
@@ -389,16 +398,29 @@ p[which.max(p)]
 
 
 
-#maybe useful, need to ask professor
+#finally, we finish deleting collinear variable and we do a AIC do a backward
+#model selection and get the finalModel
 finalModel <- step(alteredModel)
+#check final model colinearity and all of them are less than 10, it works.
 vif(finalModel)
 
+#get summary of finalModel
 summary(finalModel)
+
+#use qq plot and Shapiro-Wilk normality test to test the normality
+# because the p value in Shapiro-Wilk normality test is larger than 0.05,
+# the data is normal, the QQ plot show the same result
 qqnorm(resid(finalModel))
 qqline(resid(finalModel))
 shapiro.test(resid(finalModel))
+
+hist(resid(finalModel))
+plot(dataModel, which = 1:2)
+
+
 Anova(finalModel)
+#get the confidence interval
 confint(finalModel)
 
 
-#forward Selection
+
