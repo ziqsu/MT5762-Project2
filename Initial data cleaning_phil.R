@@ -181,6 +181,11 @@ summary(lm.dwt)
 
 
 
+
+
+
+
+
 ##ignore AIC below for now, may try later
 #let's try AIC...
 #data_NONA <- na.omit(clean.data)
@@ -225,8 +230,8 @@ ncvTest(dataModel)
 
 # need to write durbinWatsonTest on model
 durbinWatsonTest(dataModel)
-#null hypothesis: error are uncorrelated
-# our  p-value is 0.056, >0.05, but not by too far
+#null hypothesis: error are uncorrelated, fail to reject the null hypothesis
+# our  p-value is 0.056, >0.05
 plot(dataModel, which = 1:2)
 
 
@@ -252,13 +257,14 @@ plot(effect(term="number", mod = dataModel))
 #BICModel <- dredge(BICModel, rank = "BIC")
 firstorderModel <- lm(wt ~.*., data = numericOnly)
 summary(firstorderModel)
+
 #firstorderModel <- firstorderModel %>% update()
 #try to use Anova
 #Anova(firstorderModel)
 #model selection use AIC
 
 
-#firstorderModel <- step(firstorderModel)
+firstorderModel <- step(firstorderModel)
 summary(firstorderModel)
 Anova(firstorderModel)
 qqnorm(resid(firstorderModel))
@@ -369,6 +375,7 @@ p[which.max(p)]
 alteredModel <-update(alteredModel,.~.-inc:ed)
 p<-vif(alteredModel)
 p[which.max(p)]
+
 summary(alteredModel)
 qqnorm(resid(alteredModel))
 qqline(resid(alteredModel))
@@ -380,3 +387,16 @@ confint(alteredModel)
 #maybe useful, need to ask professor
 finalModel <- step(alteredModel)
 vif(finalModel)
+
+boot.dataModel <- function(inputdata, nboot){
+  NumofRow <- nrow(inputdata)
+  bootResult <- matrix(NA,nrow = nboot, ncol = 8)
+  for(i in 1:nboot){
+    bootdata <- inputdata[sample(1:NumofRow),NumofRow]
+    bootLM <- lm(wt~ gestation+parity+ht+drace+dwt+smoke+number, data = inputdata)
+    print(coef(bootLM))
+    bootResult[i,] <- coef(bootLM)
+  }
+  bootResult
+  
+} 
