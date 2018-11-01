@@ -91,11 +91,11 @@ plot_correlation(data)
 # Changing the class of categorical variables back to integers
 cols_to_change = c(8, 9, 11, 14, 16, 20:23)
 for(i in cols_to_change){
-  class(data[, i]) = "integer"
+  class(data[, i]) = "factor"
 }
 cols_to_change
 
-# Fitting models for  certain variables against baby weight
+# Fitting interaction models for  certain variables against baby weight
 
 # Linear model between race and mother weight against baby weight
 
@@ -123,8 +123,9 @@ inc_wt.1 <- lm(wt ~ inc*wt.1, data = data)
 summary(inc_wt.1)
 anova(inc_wt.1)
 
+?round
 
-# Model diagnostics for each model built
+# Model diagnostics for each model built, 
 # Error shape and distribution of model between race and mother weight against baby weight
 qqnorm(resid(race_wt.1))
 shapiro.test(resid(race_wt.1))
@@ -178,3 +179,7 @@ AIC(race_wt.1)
 AIC(smoke_wt.1)
 AIC(parity_wt.1)
 AIC(inc_wt.1)
+
+library(corrplot)
+corr_plot <- corrplot(wt.df,type = "upper", method = "square", insig = "blank", 
+                      order = "hclust", tl.col = "black")
