@@ -91,7 +91,7 @@ plot_correlation(data)
 # Changing the class of categorical variables back to integers
 cols_to_change = c(8, 9, 11, 14, 16, 20:23)
 for(i in cols_to_change){
-  class(data[, i]) = "integer"
+  class(data[, i]) = "factor"
 }
 cols_to_change
 
