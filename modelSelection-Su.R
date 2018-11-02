@@ -310,7 +310,8 @@ Anova(finalModel)
 #get the confidence interval
 confint(finalModel)
 
-
+finalResid <- resid(finalModel)
+plot(fitted(finalModel),finalResid, ylab= "Residuals", xlab = "Fitted Values")
 
 
 
