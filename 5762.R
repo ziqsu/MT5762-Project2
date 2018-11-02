@@ -123,7 +123,11 @@ inc_wt.1 <- lm(wt ~ inc*wt.1, data = data)
 summary(inc_wt.1)
 anova(inc_wt.1)
 
-?round
+#Checking AIC scores for each model
+AIC(race_wt.1)
+AIC(smoke_wt.1)
+AIC(parity_wt.1)
+AIC(inc_wt.1)
 
 # Model diagnostics for each model built, 
 # Error shape and distribution of model between race and mother weight against baby weight
@@ -175,10 +179,7 @@ durbinWatsonTest(parity_wt.1)
 # Error independence of model between mother's weight and income against baby weight
 durbinWatsonTest(inc_wt.1)
 
-AIC(race_wt.1)
-AIC(smoke_wt.1)
-AIC(parity_wt.1)
-AIC(inc_wt.1)
+
 
 library(corrplot)
 corr_plot <- corrplot(wt.df,type = "upper", method = "square", insig = "blank", 

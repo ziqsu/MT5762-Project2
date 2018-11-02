@@ -41,3 +41,16 @@ cv <- lapply(folds, function(x){
   accuracy <- (cm[1,1] + cm [2,2]) / (cm[1,1] + cm [2,2] + cm[1,2] + cm [2,1])
   return(accuracy)
 })
+
+
+library(datasets)
+
+?traindata
+library(caret)
+
+# Define train control for k fold cross validation
+train_control <- trainControl(method="cv", number=10)
+# Fit Naive Bayes Model
+model <- train(Species~., data=iris, trControl=train_control, method="nb")
+# Summarise Results
+print(model)
