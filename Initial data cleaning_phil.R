@@ -191,11 +191,8 @@ cols_to_change
 
 
 
-##ignore AIC below for now, may try later
-#let's try AIC...
-#data_NONA <- na.omit(clean.data)
-#fullModel <- lm(wt ~ ., data = data_NONA)
-#step(fullModel)
+
+
 clean.data.naomit <- na.omit(clean.data)
 # select data that does not contain id and data of birth
 # consider this two factor does not have effect on baby birth weight
@@ -260,6 +257,33 @@ confint(dataModel)
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# data model is done
+
+#let us do the final model
 
 cols_to_change = c(1, 2, 3, 4,6, 8, 9, 11, 14, 16, 19, 20:23)
 for(i in cols_to_change){
