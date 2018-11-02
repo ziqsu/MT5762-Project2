@@ -71,127 +71,6 @@ summary(clean.data$wt)
 
 ##################################
 
-#install.packages("corrplot")
-library(corrplot)
-cor.data <- cor(clean.data, use = "complete.obs")
-corrplot(cor.data, method = "circle", type = "lower")
-
-#create correlation values for wt with all other numeric variables
-cor.vec <- c(rep(0, ncol(clean.data)))
-for(i in 1:ncol(clean.data)){
-  cor.vec[i] <- cor(clean.data$wt, clean.data[,i], use = "complete.obs")
-}
-
-cor.vec
-#no particularly strong correlations but gestation is strongest at 0.19
-#I appreciate that this vector isn't clear. I counted along to tell what
-#was what. Will make clearer if used in report.
-
-####### Linear regression for baby weight and all numeric variables #######
-
-#Gestation, mother's height and father's weight appear to be significant
-lin.reg <- lm(wt ~ gestation + age + ht + wt.1 + dage + dht + dwt, 
-              data = clean.data)
-summary(lin.reg)
-
-###########################################################################
-
-
-########## Analysis of gestation ##########
-
-#scatterplot of gestation against birth weight
-scat.gest <- ggplot(clean.data, aes(gestation, wt)) +
-  geom_point() + geom_smooth(method = lm)
-scat.gest
-
-#linear regression for gestation - results are significant
-lm.gest <- lm(wt ~ gestation, data = clean.data)
-summary(lm.gest)
-
-
-########## Analysis of smoke ##########
-
-#linear regression for smoke - results are significant for factor 1
-#(smokes now) compared to never smoked (the baseline)
-lm.smoke <- lm(wt ~ factor(smoke), data = clean.data)
-summary(lm.smoke)
-
-#the boxplots show smaller mean for 'smokes now' but it is still within the
-#confidence intervals of the other levels of smoking
-smoke.box.xlabels <- c("Never", "Smokes now", "Smoked until pregnancy",
-                       "Once smoked", "Unknown")
-
-#tried to add means to boxplots but can't get it to work
-smoke.means <- aggregate(wt ~ factor(smoke), clean.data, mean)
-
-smoke.box <- ggplot(clean.data, aes(factor(smoke), wt)) +
-  geom_boxplot() + labs(title = "Babies' weight per level of mother's smoking",
-                        x = "Smoked or not", y = "Babies' weight") +
-  scale_x_discrete(labels= smoke.box.xlabels) #+ 
-  #geom_text(data = smoke.means, aes(label = wt, y = wt + 0.08))
-smoke.box
-
-########## Analysis of wt.1 (mother's weight) ##########
-
-#scatterplot of mother's weight against baby's weight
-scat.mwt <- ggplot(clean.data, aes(wt.1, wt)) +
-  geom_point() + geom_smooth(method = lm)
-scat.mwt
-
-#linear regression for mother's weight - results are NOT significant
-lm.mwt <- lm(wt ~ wt.1, data = clean.data)
-summary(lm.mwt)
-
-
-########## Analysis of number (of cigarettes smoked by mother) ##########
-
-#boxplots don't show much
-number.box <- ggplot(clean.data, aes(factor(number), wt)) +
-  geom_boxplot()
-number.box
-
-#linear regression for number of cigarettes smoked
-lm.number <- lm(wt ~ factor(number), data = clean.data)
-summary(lm.number)
-
-
-########## Analysis of height (of mother) ##########
-
-#scatterplot of mother's height against baby's weight
-scat.mht <- ggplot(clean.data, aes(ht, wt)) +
-  geom_point() + geom_smooth(method = lm)
-scat.mht
-
-#linear regression for mother's height - results are significant
-lm.mht <- lm(wt ~ ht, data = clean.data)
-summary(lm.mht)
-
-
-########## Analysis of weight (of father) ##########
-
-#scatterplot of father's weight against baby's weight
-scat.dwt <- ggplot(clean.data, aes(dwt, wt)) +
-  geom_point() + geom_smooth(method = lm)
-scat.dwt
-
-#linear regression for father's weight - results are significant
-lm.dwt <- lm(wt ~ dwt, data = clean.data)
-summary(lm.dwt)
-
-
-############################################################
-
-
-#make sure R knows that these variables are factors
-cols_to_change = c(1, 2, 3, 4,6, 8, 9, 11, 14, 16, 19, 20:23)
-for(i in cols_to_change){
-  class(clean.data[, i]) = "factor"
-}
-cols_to_change
-
-
-
-
 
 clean.data.naomit <- na.omit(clean.data)
 # select data that does not contain id and data of birth
@@ -259,33 +138,6 @@ confint(dataModel)
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# data model is done
-
-#let us do the final model
-
 cols_to_change = c(1, 2, 3, 4,6, 8, 9, 11, 14, 16, 19, 20:23)
 for(i in cols_to_change){
   class(clean.data[, i]) = "factor"
@@ -317,7 +169,7 @@ plot(firstorderModel, which = 1:2)
 
 # we exam the collinearity of the firstorderModel we find that there are a lot of
 # variable that its GVIF number is larger than 10, so in the following step.
- 
+
 # 1. we find the maximum number of GVIF, if it is larger than 10,remove it  
 # 2. do the vif function again to check the collinearity and get the maximum repeat the step 1
 
@@ -428,12 +280,6 @@ p[which.max(p)]
 #finally, we finish deleting collinear variable and we do a AIC do a backward
 #model selection and get the finalModel
 finalModel <- step(alteredModel)
-<<<<<<< HEAD
-=======
-vif(finalModel)
-
-
->>>>>>> bea7f278a48d94d5b85b642a4ed7efff72358496
 #check final model colinearity and all of them are less than 10, it works.
 vif(finalModel)
 #get summary of finalModel
@@ -466,6 +312,9 @@ plot(dataModel, which = 1:2)
 Anova(finalModel)
 #get the confidence interval
 confint(finalModel)
+
+
+
 
 
 
