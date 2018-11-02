@@ -1,3 +1,8 @@
+#load in the data
+babies.data <- read.table(file.choose(), header = TRUE)
+babies.data
+
+
 #observations from data set:
 #   pluralty is always 5
 #   outcome is always 1
