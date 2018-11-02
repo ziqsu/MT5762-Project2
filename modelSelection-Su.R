@@ -293,7 +293,7 @@ qqline(resid(finalModel))
 shapiro.test(resid(finalModel))
 
 hist(resid(finalModel))
-plot(dataModel, which = 1:2)
+plot(finalModel, which = 1:2)
 
 # do Breusche-Pagan test with respect to fitted model
 ncvTest(finalModel)
@@ -304,9 +304,6 @@ ncvTest(finalModel)
 # need to write durbinWatsonTest on model
 durbinWatsonTest(finalModel)
 #null hypothesis: error variances are uncorrelated, fail to reject the null hypothesis
-
-plot(dataModel, which = 1:2)
-
 #MT5761 notes page 22
 
 Anova(finalModel)
