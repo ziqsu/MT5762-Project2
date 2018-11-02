@@ -161,9 +161,6 @@ plot(fitted(smoke_wt.1), smoke_resid, ylab = 'residuals', xlab = 'Fitted values'
 # Error spread of model between mother's weight and parity against baby weight
 parity_resid <- resid(parity_wt.1)
 plot(fitted(parity_wt.1), parity_resid, ylab = 'residuals', xlab = 'Fitted values')
-•	Parity and mother’s weight against baby weight = 0.0468
-•	Mother’s weight and income against baby weight = 0.046
-•	Smoke and mother’s weight against baby weight = 0.674
 
 # Error spread of model between mother's weight and income against baby weight
 inc_resid <- resid(inc_wt.1)
@@ -181,9 +178,6 @@ durbinWatsonTest(parity_wt.1)
 
 # Error independence of model between mother's weight and income against baby weight
 durbinWatsonTest(inc_wt.1)
-•	Parity and mother’s weight against baby weight = 0.0468
-•	Mother’s weight and income against baby weight = 0.046
-•	Smoke and mother’s weight against baby weight = 0.674
 
 ncvTest(smoke_wt.1)
 ncvTest(inc_wt.1)
